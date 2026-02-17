@@ -128,6 +128,12 @@ public final class OloPluginProcessor extends AbstractProcessor {
             sb.append(in).append("    type: ").append(escapeYaml(out.type())).append("\n");
             sb.append(in).append("    description: ").append(escapeYaml(out.description())).append("\n");
         }
+        if (nonEmpty(p.sampleInput())) {
+            sb.append(in).append("sampleInput: ").append(escapeYaml(p.sampleInput())).append("\n");
+        }
+        if (nonEmpty(p.sampleInputDescription())) {
+            sb.append(in).append("sampleInputDescription: ").append(escapeYaml(p.sampleInputDescription())).append("\n");
+        }
         String smallSvg = nonEmpty(p.iconSmall()) ? p.iconSmall() : PackageFormat.iconPathForClass(simpleName, PackageFormat.SUFFIX_ICON_64);
         String largeSvg = nonEmpty(p.iconLarge()) ? p.iconLarge() : PackageFormat.iconPathForClass(simpleName, PackageFormat.SUFFIX_ICON_256);
         String bannerSvg = nonEmpty(p.banner()) ? p.banner() : PackageFormat.iconPathForClass(simpleName, PackageFormat.SUFFIX_BANNER);

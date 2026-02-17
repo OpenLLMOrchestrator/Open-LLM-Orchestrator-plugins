@@ -41,7 +41,9 @@ import java.util.Set;
     description = "Sample plugin that echoes original input into output; for testing and as template.",
     category = "TOOL",
     inputs = {},
-    outputs = {}
+    outputs = {},
+    sampleInput = "{\"message\":\"Hello, validate me\"}",
+    sampleInputDescription = "Any key-value input; plugin echoes it to output."
 )
 public final class SampleEchoPlugin implements CapabilityHandler, ContractCompatibility, PlannerInputDescriptor, PluginTypeDescriptor {
 

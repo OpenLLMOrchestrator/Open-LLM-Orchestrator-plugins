@@ -1,0 +1,46 @@
+# On every push to the default branch, build and publish the plugin zip to GitHub Releases.
+# Uses a single "Continuous" release (tag: continuous); each run uploads a new asset with a unique version.
+name: Release on commit
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+env:
+  RELEASE_VERSION: "1.0.0-${{ github.run_number }}"
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # create/update release and upload assets
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: Build and create release zip
+        run: |
+          chmod +x build.sh
+          export RELEASE_VERSION="${{ env.RELEASE_VERSION }}"
+          ./build.sh
+
+      - name: Upload to GitHub Release (Continuous)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: continuous
+          name: Continuous
+          body: "Built from ${{ github.sha }} (${{ github.event.head_commit.message || 'push' }})."
+          draft: false
+          prerelease: true
+          files: build/Open-LLM-Orchestrator-plugins-${{ env.RELEASE_VERSION }}.zip
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

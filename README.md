@@ -82,12 +82,28 @@ gradle oloZip
 
 Projects that use `@OloPlugin` and define the `oloZip` task (e.g. `olo-plugin-vectordb-retrieval`) produce a `.olo` file in `build/olo/` when you run `build.bat` or `build.sh`.
 
+For a **review of all plugins** (functionality, SPI, annotations) and how to **validate a plugin as an individual unit** in the planned UI (sample input), see [docs/plugin-review.md](docs/plugin-review.md) and [docs/plugin-yaml-schema.md](docs/plugin-yaml-schema.md#validation-as-individual-unit-planned-ui).
+
 ## Releasing binaries on GitHub
 
 1. Run **`build.bat`** or **`build.sh`** (optionally set `RELEASE_VERSION=1.2.0`).
 2. In your GitHub repo, go to **Releases** → **Draft a new release**; tag e.g. `v1.2.0`.
 3. Attach **`build/Open-LLM-Orchestrator-plugins-<version>.zip`** as the release binary asset.
 4. Users download the zip and extract the `.olo` files for use in the Worker or pipeline UI (drag-and-drop plugins).
+
+## CI – Release on commit
+
+The workflow **`.github/workflows/release-on-commit.yml`** runs on every push to `main` (or `master`) and on **workflow_dispatch** (manual run). It:
+
+1. Builds the repo with Java 21 and **`./build.sh`** (version = `1.0.0-<run_number>`).
+2. Creates or updates a **Continuous** release (tag: `continuous`) and uploads **`Open-LLM-Orchestrator-plugins-<version>.zip`** as a prerelease asset.
+
+Each run adds a new asset to the same release so you always have the latest commit’s binaries under **Releases → Continuous**.
+
+**For CI to succeed**, the build must resolve **plugin-contract** (e.g. from Maven local or a published artifact). If the Worker repo is not available in CI:
+
+- Publish **plugin-contract** from the Worker repo to a Maven repo (e.g. GitHub Packages or Maven Central) and point this repo’s build to it, or
+- Add a prior job that checks out the Worker repo (using a token with repo access), runs `:plugin-contract:publishToMavenLocal`, and passes the Gradle user home as a cache to the build job.
 
 ## Using with the Worker
 

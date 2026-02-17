@@ -30,7 +30,9 @@ import java.util.Set;
     outputs = {
         @OloPlugin.Output(name = "result", type = "string", description = "Stub response"),
         @OloPlugin.Output(name = "response", type = "string", description = "Alias for result")
-    }
+    },
+    sampleInput = "{\"question\":\"What is 2+2?\"}",
+    sampleInputDescription = "Provide a question; stub echoes a response without calling an LLM."
 )
 public final class StubModelPlugin implements CapabilityHandler, ContractCompatibility, PlannerInputDescriptor, PluginTypeDescriptor {
 

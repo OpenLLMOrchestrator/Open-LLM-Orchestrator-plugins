@@ -105,6 +105,19 @@ public @interface OloPlugin {
     String banner() default "";
 
     /**
+     * Optional (not mandatory). Sample input for standalone validation in the UI.
+     * When non-empty: JSON object that the UI can use as {@code context.getOriginalInput()}
+     * when running the plugin as an individual unit. Keys should match the plugin's expected
+     * input names (see {@link #inputs()}). Omit or leave empty if no sample is provided.
+     */
+    String sampleInput() default "";
+
+    /**
+     * Optional (not mandatory). Short note for the validation UI when sample input is used.
+     */
+    String sampleInputDescription() default "";
+
+    /**
      * Declares one input port for the plugin (for UI binding).
      */
     @Retention(RetentionPolicy.RUNTIME)

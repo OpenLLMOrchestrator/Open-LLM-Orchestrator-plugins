@@ -27,7 +27,9 @@ import java.util.Set;
     outputs = {
         @OloPlugin.Output(name = "toolResult", type = "string", description = "Echoed result"),
         @OloPlugin.Output(name = "toolName", type = "string", description = "Tool name used")
-    }
+    },
+    sampleInput = "{\"toolName\":\"echo\",\"toolInput\":\"Hello from validation\"}",
+    sampleInputDescription = "Provide toolName (optional) and toolInput or question to echo back."
 )
 public final class EchoToolPlugin implements CapabilityHandler, ContractCompatibility, PlannerInputDescriptor, PluginTypeDescriptor {
 

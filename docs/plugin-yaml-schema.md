@@ -16,6 +16,15 @@ Each `.olo` package (and the generated `plugin.yaml` inside it) bundles everythi
 
 The `.olo` archive contains `plugin.yaml`, `plugin.jar`, and `icons/` (including default SVGs), so the UI can resolve icon paths relative to the package root. For multi-plugin JARs, `plugin.yaml` uses a `plugins:` array so each entry is one drag-and-drop component.
 
+### Validation as individual unit (planned UI)
+
+To let users **validate a plugin in isolation** before using it in a pipeline:
+
+1. **sampleInput** (optional): JSON object that the UI uses as the plugin’s input when running a standalone test. The runner builds a `PluginContext` whose `getOriginalInput()` returns this map, instantiates the plugin class from **className**, calls `execute(context)`, and displays the result.
+2. **sampleInputDescription** (optional): Short note shown in the validation form (e.g. “Provide a question; optional context and modelId.”).
+
+Plugins that set `sampleInput` (and optionally `sampleInputDescription`) in `@OloPlugin` will have these fields in `plugin.yaml`; the UI can offer a “Validate” or “Try it” action that runs the plugin with the sample input and shows the output so the plugin can be verified as a working unit.
+
 ## Schema version: 1.0
 
 ```yaml
@@ -41,6 +50,9 @@ plugin:
     - name: string
       type: string
       description: string
+  # Optional (not mandatory) – for UI "Validate as individual unit"
+  sampleInput: string          # If set: JSON object for context.getOriginalInput() in standalone run
+  sampleInputDescription: string   # If set: short note for the validation form
   icons:
     smallSvg: string      # Class-based: icons/<SimpleClassName>-icon-64.svg (or override from @OloPlugin.iconSmall())
     largeSvg: string      # icons/<SimpleClassName>-icon-256.svg
