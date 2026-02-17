@@ -1,0 +1,49 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group = 'com.openllm'
+version = findProperty('oloVersion') ?: '0.0.1'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    // No dependencies - annotations only for use by plugin modules
+}
+
+tasks.named('jar') {
+    archiveBaseName = 'olo-annotations'
+}
+
+java {
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            artifactId = 'olo-annotations'
+            groupId = group
+            version = version
+        }
+    }
+    repositories {
+        def repoUrl = System.getenv('MAVEN_REPO_URL')
+        if (repoUrl != null && !repoUrl.isBlank()) {
+            maven {
+                url = uri(repoUrl)
+                credentials {
+                    username = System.getenv('GITHUB_ACTOR') ?: ''
+                    password = System.getenv('GITHUB_TOKEN') ?: ''
+                }
+            }
+        } else {
+            mavenLocal()
+        }
+    }
+}

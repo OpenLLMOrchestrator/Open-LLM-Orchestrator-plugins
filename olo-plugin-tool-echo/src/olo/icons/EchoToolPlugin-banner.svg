@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 312" width="820" height="312">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#16a34a"/>
+      <stop offset="100%" style="stop-color:#22c55e"/>
+    </linearGradient>
+  </defs>
+  <rect width="820" height="312" fill="url(#bg)"/>
+  <path d="M60 156 Q96 136 140 156 Q184 176 220 156" fill="none" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <path d="M60 188 Q96 168 140 188 Q184 208 220 188" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+  <text x="280" y="170" font-family="system-ui,sans-serif" font-size="42" font-weight="600" fill="white">Echo Tool</text>
+  <text x="280" y="210" font-family="system-ui,sans-serif" font-size="20" fill="rgba(255,255,255,0.9)">Returns input as result</text>
+</svg>

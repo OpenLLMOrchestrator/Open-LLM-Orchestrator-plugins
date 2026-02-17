@@ -1,0 +1,3 @@
+com.openllmorchestrator.worker.plugin.llm.Llama32ChatPlugin
+com.openllmorchestrator.worker.plugin.llm.Llama32ModelPlugin
+com.openllmorchestrator.worker.plugin.llm.Llama32FixedChatPlugin

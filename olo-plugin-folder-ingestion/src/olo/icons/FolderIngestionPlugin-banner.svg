@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 312" width="820" height="312">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ca8a04"/>
+      <stop offset="100%" style="stop-color:#eab308"/>
+    </linearGradient>
+  </defs>
+  <rect width="820" height="312" fill="url(#bg)"/>
+  <path d="M48 116 L112 116 L128 132 L208 132 L208 196 L48 196 Z" fill="none" stroke="white" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M64 148 L176 148 M64 168 L168 168" stroke="white" stroke-width="4"/>
+  <text x="280" y="170" font-family="system-ui,sans-serif" font-size="42" font-weight="600" fill="white">Folder Ingestion</text>
+  <text x="280" y="210" font-family="system-ui,sans-serif" font-size="20" fill="rgba(255,255,255,0.9)">Read files to tokenizedChunks</text>
+</svg>

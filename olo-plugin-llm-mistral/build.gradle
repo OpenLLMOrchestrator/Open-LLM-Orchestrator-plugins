@@ -1,0 +1,71 @@
+plugins {
+    id 'java-library'
+}
+
+def ollamaVersion = findProperty('oloPluginLlmOllamaVersion') ?: '0.0.1'
+def ollamaDep = rootProject?.findProject(':olo-plugin-llm-ollama') != null ? project(':olo-plugin-llm-ollama') : "com.openllm:olo-plugin-llm-ollama:${ollamaVersion}"
+def oloAnnotationsVersion = findProperty('oloAnnotationsVersion') ?: '0.0.1'
+def oloProcessorVersion = findProperty('oloProcessorVersion') ?: '0.0.1'
+def oloAnnotationsDep = rootProject?.findProject(':olo-annotations') != null ? project(':olo-annotations') : "com.openllm:olo-annotations:${oloAnnotationsVersion}"
+def oloProcessorDep = rootProject?.findProject(':olo-processor') != null ? project(':olo-processor') : "com.openllm:olo-processor:${oloProcessorVersion}"
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'com.openllm:plugin-contract:0.0.1'
+    implementation ollamaDep
+    compileOnly oloAnnotationsDep
+    annotationProcessor oloProcessorDep
+}
+
+tasks.named('jar') {
+    archiveBaseName = project.name
+    exclude 'olo/**'
+}
+
+def oloVersion = '1.0.0'
+def oloStagingDir = layout.buildDirectory.dir("olo-staging")
+tasks.register('oloStaging') {
+    dependsOn jar, compileJava
+    def outDir = oloStagingDir.get().asFile
+    outputs.dir(outDir)
+    inputs.file(project.layout.buildDirectory.file("classes/java/main/olo/plugin.yaml"))
+    inputs.files(tasks.named('jar'))
+    doLast {
+        outDir.mkdirs()
+        project.copy { from(project.file("${project.buildDir}/classes/java/main/olo/plugin.yaml")); into(outDir) }
+        project.copy { from(tasks.named('jar').get().archiveFile.get().asFile); into(outDir); rename { 'plugin.jar' } }
+        if (file('src/olo/icons').exists()) { project.copy { from('src/olo/icons'); into(new File(outDir, 'icons')) } }
+        if (file('src/olo/README.md').exists()) { project.copy { from('src/olo/README.md'); into(outDir) } }
+        if (file('src/olo/LICENSE').exists()) { project.copy { from('src/olo/LICENSE'); into(outDir) } }
+    }
+}
+tasks.register('oloChecksums') {
+    dependsOn oloStaging
+    doLast {
+        def dir = oloStagingDir.get().asFile
+        def checksums = new StringBuilder()
+        dir.eachFileRecurse { f ->
+            if (f.file && f.name != 'checksums.sha256') {
+                def rel = dir.toPath().relativize(f.toPath()).toString().replace('\\', '/')
+                checksums.append(sha256(f)).append("  ").append(rel).append("\n")
+            }
+        }
+        new File(dir, 'checksums.sha256').text = checksums.toString()
+    }
+}
+def sha256(File f) {
+    def digest = java.security.MessageDigest.getInstance('SHA-256')
+    f.withInputStream { is -> digest.update(is.readAllBytes()) }
+    digest.digest().encodeHex().toString()
+}
+tasks.register('oloZip', Zip) {
+    archiveBaseName = project.name
+    archiveVersion = oloVersion
+    archiveExtension = 'olo'
+    dependsOn oloChecksums
+    from(oloStagingDir) { include '**/*' }
+}
