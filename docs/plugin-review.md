@@ -51,6 +51,40 @@ This document reviews all plugin projects for: **contract implementation**, **SP
   - `sampleInputDescription = "Optional note for the validation form."`
 - **Example**: **olo-plugin-tool-echo** already sets `sampleInput` and `sampleInputDescription`; its `plugin.yaml` will contain these fields so the UI can offer a “Validate” action with pre-filled input.
 
+## Environment variables (configuration)
+
+All configuration uses **environment variables with default values**. The user sets the env var to override; if unset, the plugin uses the default.
+
+| Plugin / area | Env var | Default | Description |
+|---------------|---------|---------|-------------|
+| **Ollama** (all LLM Ollama plugins) | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama API base URL |
+| | `OLLAMA_MODEL` | `llama3.2:latest` | Default model |
+| | `OLLAMA_TIMEOUT_SECONDS` | `300` | HTTP timeout (seconds) |
+| **Simple Guardrail** | `GUARDRAIL_MAX_LENGTH` | `10000` | Max content length when not in input |
+| | `GUARDRAIL_BLOCKLIST_WORDS` | (empty) | Comma-separated blocklist when not in input |
+| **Simple Prompt Builder** | `PROMPT_DEFAULT_TEMPLATE` | `Question: {question}\n\nContext:\n{context}` | Default template when input.template is empty |
+| **Folder Ingestion** | `FOLDER_INGESTION_DEFAULT_EXTENSIONS` | `.txt,.md,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.odt,.ods,.odp,.rtf,.html,.htm,.xml,.json` | Default file extensions when input.fileExtensions is empty (common doc formats) |
+| **Answer Format** | `ANSWER_FORMAT_PREFIX` | `ANS: "` | Prefix for formatted output line (or use template file in plugin data dir) |
+| **All plugins (shared)** | `OLO_PLUGIN_DATA_DIR` | `olo-data` | Root directory for per-plugin data; in container set e.g. `/data/olo` |
+
+Other plugins take configuration from input only or have no backend settings.
+
+## Common plugin data directory (container / host)
+
+A **single root directory** is shared by all plugins and can be set with **`OLO_PLUGIN_DATA_DIR`** (default: `olo-data`, relative to process working directory). In a container, set it to e.g. **`/data/olo`** so that all plugin data lives under a known path and the runtime can mount volumes or ensure file availability there.
+
+- **Per-plugin subfolder:** Each plugin has a dedicated subfolder: `<OLO_PLUGIN_DATA_DIR>/<pluginId>/`. The plugin id is from `@OloPlugin` (e.g. `com.openllm.plugin.folder.ingestion`). So folder ingestion uses `<base>/com.openllm.plugin.folder.ingestion/`, answer format uses `<base>/com.openllm.plugin.output.answerformat/`, etc.
+- **Relative paths:** Plugins that accept relative paths (e.g. folder path for RAG uploads, template paths for formatting) resolve them against their plugin subfolder. This way:
+  - **Upload / RAG:** The runtime can place uploaded files under the plugin’s subfolder (e.g. `uploads/`) and the plugin reads from there; file availability is guaranteed at that location.
+  - **Templates:** Response-format or prompt templates can be stored under the plugin’s subfolder (e.g. `templates/prefix.txt`, `templates/response.mustache`) and the plugin loads them from there.
+- **API:** Use **`PluginDataPaths`** (in `olo-annotations`) in plugin code:
+  - `PluginDataPaths.getBaseDir()` – root path
+  - `PluginDataPaths.getPluginDir(pluginId)` – plugin’s subfolder
+  - `PluginDataPaths.resolve(pluginId, relativePath)` – resolve e.g. `"uploads"` or `"templates/prefix.txt"` under the plugin dir
+  - `PluginDataPaths.ensurePluginDirExists(pluginId)` – create the plugin dir if needed
+
+**Plugins using the shared data dir today:** Folder Ingestion (relative `folderPath` is resolved under its plugin dir); Answer Format (optional `templates/prefix.txt` in its plugin dir overrides the default prefix).
+
 ## Gaps / notes
 
 - **plugin-contract dependency**: All plugins depend on `com.openllm:plugin-contract`; the Worker repo (or a published artifact) must provide it. Not part of this repo.

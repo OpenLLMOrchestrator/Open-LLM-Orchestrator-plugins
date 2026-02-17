@@ -63,14 +63,14 @@ public final class VectorStoreRetrievalPlugin implements CapabilityHandler, Cont
         Map<String, Object> accumulated = context.getAccumulatedOutput();
         Map<String, Object> input = context.getOriginalInput();
 
-        Object chunksObj = accumulated.get("tokenizedChunks");
+        Object chunksObj = accumulated != null ? accumulated.get("tokenizedChunks") : null;
         if (chunksObj instanceof List && !((List<?>) chunksObj).isEmpty()) {
             context.putOutput("stored", true);
             context.putOutput("chunkCount", ((List<?>) chunksObj).size());
             return CapabilityResult.builder().capabilityName(NAME).data(new HashMap<>(context.getCurrentPluginOutput())).build();
         }
 
-        String question = (String) input.get("question");
+        String question = input != null ? (String) input.get("question") : null;
         if (question != null && !question.isBlank()) {
             context.putOutput("retrievedChunks", retrieveFromVectorDb(question));
         }

@@ -38,7 +38,7 @@ popd
 
 echo [4/6] Building and publishing olo-plugin-llm-ollama...
 pushd olo-plugin-llm-ollama
-call %GRADLE_CMD% publishToMavenLocal
+call %GRADLE_CMD% clean publishToMavenLocal
 if errorlevel 1 (popd & echo BUILD FAILED & exit /b 1)
 call %GRADLE_CMD% oloZip 2>nul
 if not errorlevel 1 (
@@ -51,18 +51,18 @@ echo [5/6] Building plugin projects and collecting outputs...
 if not exist "build\plugins" mkdir "build\plugins"
 if not exist "build\olo" mkdir "build\olo"
 
-copy /Y "olo-plugin-llm-ollama\build\libs\*.jar" "build\plugins\" 2>nul
+copy /Y "olo-plugin-llm-ollama\build\libs\olo-plugin-llm-ollama*.jar" "build\plugins\" 2>nul
 
 for /d %%P in (olo-plugin-access-allowall olo-plugin-caching-memory olo-plugin-vectordb-retrieval olo-plugin-llm-mistral olo-plugin-llm-phi3 olo-plugin-llm-gemma2 olo-plugin-llm-qwen2 olo-plugin-tokenizer-document olo-plugin-folder-ingestion olo-plugin-output-answerformat olo-plugin-memory-context olo-plugin-tool-echo olo-plugin-guardrail-simple olo-plugin-prompt-simple olo-plugin-observability-passthrough olo-plugin-sample-stubs) do (
   if exist "%%P" (
     pushd "%%P"
-    call %GRADLE_CMD% build
+    call %GRADLE_CMD% clean build
     if not errorlevel 1 (
-      copy /Y "build\libs\*.jar" "%ROOT%build\plugins\" 2>nul
+      copy /Y "build\libs\%%P*.jar" "%ROOT%build\plugins\" 2>nul
     )
     call %GRADLE_CMD% oloZip 2>nul
     if not errorlevel 1 (
-      copy /Y "build\distributions\*.olo" "%ROOT%build\olo\" 2>nul
+      copy /Y "build\distributions\%%P*.olo" "%ROOT%build\olo\" 2>nul
     )
     popd
   )

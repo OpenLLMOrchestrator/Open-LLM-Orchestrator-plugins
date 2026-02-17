@@ -40,10 +40,15 @@ public final class SimplePromptBuilderPlugin implements CapabilityHandler, Contr
         String question = input != null ? (String) input.get("question") : null;
         if (question == null && accumulated != null) question = String.valueOf(accumulated.get("question"));
         if (question == null) question = "";
-        Object ctxObj = accumulated != null ? accumulated.get("retrievedChunks") : (accumulated != null ? accumulated.get("context") : null);
+        Object ctxObj = null;
+        if (accumulated != null) {
+            ctxObj = accumulated.get("retrievedChunks");
+            if (ctxObj == null) ctxObj = accumulated.get("context");
+        }
+        if (ctxObj == null && input != null) ctxObj = input.get("context");
         String contextStr = ctxObj != null ? ctxObj.toString() : "";
         String template = input != null ? (String) input.get("template") : null;
-        if (template == null || template.isBlank()) template = "Question: {question}\n\nContext:\n{context}";
+        if (template == null || template.isBlank()) template = getEnv("PROMPT_DEFAULT_TEMPLATE", "Question: {question}\n\nContext:\n{context}");
         String resultVal = accumulated != null && accumulated.get("result") != null ? String.valueOf(accumulated.get("result")) : "";
         String built = template.replace("{question}", question).replace("{context}", contextStr).replace("{result}", resultVal);
         context.putOutput("builtPrompt", built);
@@ -61,4 +66,10 @@ public final class SimplePromptBuilderPlugin implements CapabilityHandler, Contr
 
     @Override
     public String getPluginType() { return PluginTypes.PROMPT_BUILDER; }
+
+    private static String getEnv(String key, String defaultValue) {
+        String v = System.getenv(key);
+        if (v != null && !v.isBlank()) return v.trim();
+        return defaultValue;
+    }
 }

@@ -62,6 +62,7 @@ public final class ContextMemoryPlugin implements CapabilityHandler, ContractCom
         Map<String, Object> input = context.getOriginalInput();
         String key = input != null ? (String) input.get("memoryKey") : null;
         Object valueToWrite = input != null ? input.get("memoryValue") : null;
+        boolean hit = false;
         if (key != null && !key.isBlank()) {
             String stateKey = STATE_PREFIX + key;
             if (valueToWrite != null) {
@@ -70,9 +71,11 @@ public final class ContextMemoryPlugin implements CapabilityHandler, ContractCom
                 context.putOutput("written", true);
             } else {
                 Object read = context.get(stateKey);
+                hit = read != null;
                 context.putOutput("memoryValue", read);
             }
         }
+        context.putOutput("memoryHit", hit);
         return CapabilityResult.builder().capabilityName(NAME).data(new HashMap<>(context.getCurrentPluginOutput())).build();
     }
 

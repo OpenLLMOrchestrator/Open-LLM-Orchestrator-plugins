@@ -55,6 +55,23 @@ public final class SimpleGuardrailPlugin implements CapabilityHandler, ContractC
     public static final String NAME = "com.openllmorchestrator.worker.plugin.guardrail.SimpleGuardrailPlugin";
     private static final int DEFAULT_MAX_LENGTH = 10000;
 
+    private static int getEnvInt(String key, int defaultValue) {
+        String v = System.getenv(key);
+        if (v == null || v.isBlank()) return defaultValue;
+        try {
+            int n = Integer.parseInt(v.trim());
+            return n > 0 ? n : defaultValue;
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    private static String getEnv(String key, String defaultValue) {
+        String v = System.getenv(key);
+        if (v != null && !v.isBlank()) return v.trim();
+        return defaultValue != null ? defaultValue : "";
+    }
+
     @Override
     public String name() {
         return NAME;
@@ -74,12 +91,16 @@ public final class SimpleGuardrailPlugin implements CapabilityHandler, ContractC
         if (content == null) {
             content = "";
         }
+        int defaultMax = getEnvInt("GUARDRAIL_MAX_LENGTH", DEFAULT_MAX_LENGTH);
         int maxLen = input != null && input.get("maxLength") instanceof Number
-                ? ((Number) input.get("maxLength")).intValue() : DEFAULT_MAX_LENGTH;
+                ? ((Number) input.get("maxLength")).intValue() : defaultMax;
         if (maxLen <= 0) {
-            maxLen = DEFAULT_MAX_LENGTH;
+            maxLen = defaultMax;
         }
         String blocklistStr = input != null ? (String) input.get("blocklistWords") : null;
+        if (blocklistStr == null || blocklistStr.isBlank()) {
+            blocklistStr = getEnv("GUARDRAIL_BLOCKLIST_WORDS", "");
+        }
         boolean triggered = false;
         String filtered = content;
         if (content.length() > maxLen) {

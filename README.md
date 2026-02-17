@@ -66,6 +66,8 @@ Outputs:
 - **`build/olo/`** – `.olo` packages for projects that define `oloZip` (e.g. `olo-plugin-vectordb-retrieval-1.0.0.olo`).
 - **`build/Open-LLM-Orchestrator-plugins-<version>.zip`** – All .olo packages in one archive; upload this as the **binary** asset for a [GitHub Release](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository).
 
+**Build notes:** The script runs `clean build` (and `clean publishToMavenLocal` for ollama) so each project's output is fresh. Only artifacts whose names start with the project name (e.g. `olo-plugin-vectordb-retrieval*.jar`) are copied into `build/plugins/` and `build/olo/`, so legacy-named artifacts (e.g. old `plugin-vectordb`) are not collected. You may see Java deprecation or Gradle deprecation warnings; the build still succeeds. To inspect: compile with `-Xlint:deprecation` and run Gradle with `--warning-mode all`.
+
 **Build a single project** (from that project’s directory):
 
 ```batch
@@ -82,7 +84,7 @@ gradle oloZip
 
 Projects that use `@OloPlugin` and define the `oloZip` task (e.g. `olo-plugin-vectordb-retrieval`) produce a `.olo` file in `build/olo/` when you run `build.bat` or `build.sh`.
 
-For a **review of all plugins** (functionality, SPI, annotations) and how to **validate a plugin as an individual unit** in the planned UI (sample input), see [docs/plugin-review.md](docs/plugin-review.md) and [docs/plugin-yaml-schema.md](docs/plugin-yaml-schema.md#validation-as-individual-unit-planned-ui).
+For a **review of all plugins** (functionality, SPI, annotations), **environment variables** (config with defaults), **common plugin data directory** (env `OLO_PLUGIN_DATA_DIR`, per-plugin subfolder for uploads/templates), and how to **validate a plugin as an individual unit** in the planned UI, see [docs/plugin-review.md](docs/plugin-review.md) and [docs/plugin-yaml-schema.md](docs/plugin-yaml-schema.md#validation-as-individual-unit-planned-ui).
 
 ## Releasing binaries on GitHub
 

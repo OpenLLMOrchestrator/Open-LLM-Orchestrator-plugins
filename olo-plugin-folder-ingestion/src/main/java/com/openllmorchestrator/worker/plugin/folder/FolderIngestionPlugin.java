@@ -21,6 +21,7 @@ import com.openllmorchestrator.worker.contract.PlannerInputDescriptor;
 import com.openllmorchestrator.worker.contract.PluginTypeDescriptor;
 import com.openllmorchestrator.worker.contract.PluginTypes;
 import com.openllmorchestrator.olo.OloPlugin;
+import com.openllmorchestrator.olo.PluginDataPaths;
 import com.openllmorchestrator.worker.contract.CapabilityHandler;
 import com.openllmorchestrator.worker.contract.CapabilityResult;
 
@@ -41,8 +42,8 @@ import java.util.stream.Stream;
  * Reads all files from a folder (optionally filtered by extension) and outputs
  * them as tokenizedChunks for the vector DB plugin to store.
  * <p>
- * Input: "folderPath" (required), optional "fileExtensions" (e.g. ".txt,.md"),
- * optional "recursive" (boolean, default false).
+ * Input: "folderPath" (required). When relative, resolved against the plugin data dir
+ * (env OLO_PLUGIN_DATA_DIR / plugin id) so uploads/RAG files are at a known location in container. Optional "fileExtensions", "recursive".
  */
 @OloPlugin(
     id = "com.openllm.plugin.folder.ingestion",
@@ -52,7 +53,7 @@ import java.util.stream.Stream;
     category = "INGESTION",
     inputs = {
         @OloPlugin.Input(name = "folderPath", type = "string", required = true, description = "Path to folder"),
-        @OloPlugin.Input(name = "fileExtensions", type = "string", required = false, description = "Comma-separated extensions e.g. .txt,.md"),
+        @OloPlugin.Input(name = "fileExtensions", type = "string", required = false, description = "Comma-separated extensions e.g. .txt,.md,.pdf,.doc,.docx,.csv (default: common doc formats)"),
         @OloPlugin.Input(name = "recursive", type = "boolean", required = false, description = "Include subdirectories")
     },
     outputs = { @OloPlugin.Output(name = "tokenizedChunks", type = "array", description = "Chunks from ingested files") }
@@ -61,8 +62,18 @@ public final class FolderIngestionPlugin implements CapabilityHandler, ContractC
 
     private static final String CONTRACT_VERSION = "0.0.1";
     public static final String NAME = "com.openllmorchestrator.worker.plugin.folder.FolderIngestionPlugin";
-    private static final String DEFAULT_EXTENSIONS = ".txt,.md";
-    private static final Set<String> DEFAULT_EXTENSION_SET = Set.of(".txt", ".md");
+    /** Plugin id for resolving relative folderPath against shared plugin data dir. */
+    private static final String PLUGIN_ID = "com.openllm.plugin.folder.ingestion";
+    /** Default doc formats: text, markdown, PDF, Office (doc, docx, ppt, pptx, xls, xlsx), CSV, OpenDocument, RTF, web. Binary formats (e.g. pdf, doc) are read as UTF-8; for proper text extraction a prior conversion step or dedicated library may be needed. */
+    private static final String DEFAULT_EXTENSIONS = ".txt,.md,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.odt,.ods,.odp,.rtf,.html,.htm,.xml,.json";
+
+    private static Set<String> getDefaultExtensionSet() {
+        String v = System.getenv("FOLDER_INGESTION_DEFAULT_EXTENSIONS");
+        if (v != null && !v.isBlank()) {
+            return parseExtensions(v.trim());
+        }
+        return parseExtensions(DEFAULT_EXTENSIONS);
+    }
 
     @Override
     public String name() {
@@ -72,19 +83,21 @@ public final class FolderIngestionPlugin implements CapabilityHandler, ContractC
     @Override
     public CapabilityResult execute(PluginContext context) {
         Map<String, Object> input = context.getOriginalInput();
-        String folderPath = (String) input.get("folderPath");
+        String folderPath = input != null ? (String) input.get("folderPath") : null;
         if (folderPath == null || folderPath.isBlank()) {
             context.putOutput("error", "input.folderPath is required");
             context.putOutput("tokenizedChunks", List.<Map<String, Object>>of());
             return CapabilityResult.builder().capabilityName(NAME).data(new HashMap<>(context.getCurrentPluginOutput())).build();
         }
 
-        Set<String> extensions = parseExtensions((String) input.get("fileExtensions"));
-        boolean recursive = Boolean.TRUE.equals(input.get("recursive"));
+        Set<String> extensions = parseExtensions(input != null ? (String) input.get("fileExtensions") : null);
+        boolean recursive = input != null && Boolean.TRUE.equals(input.get("recursive"));
 
-        Path base = Paths.get(folderPath);
-        if (!base.isAbsolute()) {
-            base = Paths.get(System.getProperty("user.dir", ".")).resolve(folderPath).normalize();
+        Path base;
+        if (Paths.get(folderPath).isAbsolute()) {
+            base = Paths.get(folderPath).normalize();
+        } else {
+            base = PluginDataPaths.resolve(PLUGIN_ID, folderPath).toAbsolutePath().normalize();
         }
 
         List<Map<String, Object>> chunks = new ArrayList<>();
@@ -132,7 +145,7 @@ public final class FolderIngestionPlugin implements CapabilityHandler, ContractC
 
     private static Set<String> parseExtensions(String fileExtensions) {
         if (fileExtensions == null || fileExtensions.isBlank()) {
-            return DEFAULT_EXTENSION_SET;
+            return getDefaultExtensionSet();
         }
         return Stream.of(fileExtensions.split(","))
                 .map(String::trim)

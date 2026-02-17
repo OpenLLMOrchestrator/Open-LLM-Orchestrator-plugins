@@ -53,8 +53,7 @@ public final class DocumentTokenizerPlugin implements CapabilityHandler, Contrac
     @Override
     public CapabilityResult execute(PluginContext context) {
         Map<String, Object> input = context.getOriginalInput();
-
-        Object docObj = input.get("document");
+        Object docObj = input != null ? input.get("document") : null;
         String content = docObj != null ? docObj.toString() : "";
         List<Map<String, Object>> chunks = tokenize(content);
 

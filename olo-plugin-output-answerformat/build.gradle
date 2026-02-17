@@ -14,7 +14,7 @@ repositories {
 
 dependencies {
     implementation 'com.openllm:plugin-contract:0.0.1'
-    compileOnly oloAnnotationsDep
+    implementation oloAnnotationsDep   // PluginDataPaths for templates in shared data dir
     annotationProcessor oloProcessorDep
 }
 

@@ -31,20 +31,20 @@ echo "[3/6] Building and publishing olo-processor..."
 gradle_in olo-processor publishToMavenLocal || { echo "FAILED: olo-processor"; exit 1; }
 
 echo "[4/6] Building and publishing olo-plugin-llm-ollama..."
-gradle_in olo-plugin-llm-ollama publishToMavenLocal || { echo "FAILED: olo-plugin-llm-ollama"; exit 1; }
+gradle_in olo-plugin-llm-ollama clean publishToMavenLocal || { echo "FAILED: olo-plugin-llm-ollama"; exit 1; }
 mkdir -p build/plugins build/olo
 gradle_in olo-plugin-llm-ollama oloZip 2>/dev/null && cp -f olo-plugin-llm-ollama/build/distributions/*.olo build/olo/ 2>/dev/null || true
 
 echo "[5/6] Building plugin projects and collecting outputs..."
 
-cp -f olo-plugin-llm-ollama/build/libs/*.jar build/plugins/ 2>/dev/null || true
+cp -f olo-plugin-llm-ollama/build/libs/olo-plugin-llm-ollama*.jar build/plugins/ 2>/dev/null || true
 
 for dir in olo-plugin-access-allowall olo-plugin-caching-memory olo-plugin-vectordb-retrieval olo-plugin-llm-mistral olo-plugin-llm-phi3 olo-plugin-llm-gemma2 olo-plugin-llm-qwen2 olo-plugin-tokenizer-document olo-plugin-folder-ingestion olo-plugin-output-answerformat olo-plugin-memory-context olo-plugin-tool-echo olo-plugin-guardrail-simple olo-plugin-prompt-simple olo-plugin-observability-passthrough olo-plugin-sample-stubs; do
   if [ -d "$dir" ]; then
-    if gradle_in "$dir" build; then
-      cp -f "$dir/build/libs/"*.jar build/plugins/ 2>/dev/null || true
+    if gradle_in "$dir" clean build; then
+      cp -f "$dir/build/libs/${dir}"*.jar build/plugins/ 2>/dev/null || true
     fi
-    gradle_in "$dir" oloZip 2>/dev/null && cp -f "$dir/build/distributions/"*.olo build/olo/ 2>/dev/null || true
+    gradle_in "$dir" oloZip 2>/dev/null && cp -f "$dir/build/distributions/${dir}"*.olo build/olo/ 2>/dev/null || true
   fi
 done
 
