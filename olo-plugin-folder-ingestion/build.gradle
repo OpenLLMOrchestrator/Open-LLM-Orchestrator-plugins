@@ -1,5 +1,21 @@
 plugins {
     id 'java-library'
+    id 'com.gradleup.shadow' version '9.3.1'
+}
+// Fat JAR with package relocation (local copy for standalone/distributed repos)
+tasks.named('shadowJar').configure {
+    archiveClassifier.set('all')
+    mergeServiceFiles()
+    dependencies {
+        exclude(dependency('com.openllm:plugin-contract:0.0.1'))
+        project.configurations.implementation.dependencies.findAll { dep ->
+            dep.group == 'com.openllm' && dep.name?.startsWith('olo-plugin-')
+        }.each { dep ->
+            exclude(dependency("${dep.group}:${dep.name}:${dep.version ?: '0.0.1'}"))
+        }
+    }
+    relocate 'com.fasterxml.jackson', 'com.openllm.plugin.shaded.jackson'
+    relocate 'com.openllmorchestrator.olo', 'com.openllm.plugin.shaded.olo'
 }
 
 def oloAnnotationsVersion = findProperty('oloAnnotationsVersion') ?: '0.0.1'
@@ -26,15 +42,15 @@ tasks.named('jar') {
 def oloVersion = '1.0.0'
 def oloStagingDir = layout.buildDirectory.dir("olo-staging")
 tasks.register('oloStaging') {
-    dependsOn jar, compileJava
+    dependsOn shadowJar, compileJava
     def outDir = oloStagingDir.get().asFile
     outputs.dir(outDir)
     inputs.file(project.layout.buildDirectory.file("classes/java/main/olo/plugin.yaml"))
-    inputs.files(tasks.named('jar'))
+    inputs.files(tasks.named('shadowJar'))
     doLast {
         outDir.mkdirs()
         project.copy { from(project.file("${project.buildDir}/classes/java/main/olo/plugin.yaml")); into(outDir) }
-        project.copy { from(tasks.named('jar').get().archiveFile.get().asFile); into(outDir); rename { 'plugin.jar' } }
+        project.copy { from(tasks.named('shadowJar').get().archiveFile.get().asFile); into(outDir); rename { 'plugin.jar' } }
         if (file('src/olo/icons').exists()) { project.copy { from('src/olo/icons'); into(new File(outDir, 'icons')) } }
         if (file('src/olo/README.md').exists()) { project.copy { from('src/olo/README.md'); into(outDir) } }
         if (file('src/olo/LICENSE').exists()) { project.copy { from('src/olo/LICENSE'); into(outDir) } }
