@@ -9,7 +9,7 @@ Each `.olo` package (and the generated `plugin.yaml` inside it) bundles everythi
 | Data | Use in UI |
 |------|------------|
 | `id`, `name`, `version`, `description` | Catalog card and tooltip |
-| `category` | Grouping, palette section, and pipeline stage type |
+| `capability` | List of capabilities (e.g. [MODEL], [CACHING], [ACCESS, MODEL]); palette grouping and pipeline stage type |
 | `className` | Runtime: load plugin class from `plugin.jar` |
 | `inputs` / `outputs` | Ports to draw and connect (name, type, required, description) |
 | `icons.smallSvg`, `icons.largeSvg`, `icons.bannerSvg` | Card/thumbnail and detail view; fallback to `default*` if missing |
@@ -38,7 +38,7 @@ plugin:
   description: string     # Short description
   author: string          # Optional
   license: string         # SPDX id (e.g. Apache-2.0)
-  category: string        # MODEL | FILTER | VECTOR_STORE | TOOL | GUARDRAIL | REFINEMENT | etc.
+  capability: string[]     # e.g. [ "MODEL" ] or [ "ACCESS", "MODEL" ]
   className: string       # FQCN of the plugin class
   website: string         # Optional URL
   inputs:                 # For UI binding

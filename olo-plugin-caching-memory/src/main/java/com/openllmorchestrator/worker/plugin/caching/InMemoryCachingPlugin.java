@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
     name = "In-Memory Caching",
     version = "1.0.0",
     description = "In-memory get/set by cacheKey for request-scoped or static cache.",
-    category = "CACHING",
+    capability = { "CACHING" },
     inputs = {
         @OloPlugin.Input(name = "cacheKey", type = "string", required = false, description = "Cache key for get/set"),
         @OloPlugin.Input(name = "value", type = "object", required = false, description = "Value to store")

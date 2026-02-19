@@ -72,11 +72,11 @@ public @interface OloPlugin {
     String license() default "Apache-2.0";
 
     /**
-     * Plugin category / stage type for the pipeline designer
-     * (e.g. MODEL, FILTER, VECTOR_STORE, TOOL, GUARDRAIL).
-     * Default: "CUSTOM" when empty.
+     * Capabilities this plugin works with (e.g. MODEL, CACHING, RETRIEVAL, TOOL, GUARDRAIL).
+     * A plugin may support multiple capabilities. Used for palette grouping and pipeline stage type.
+     * Default: {"CUSTOM"} when empty.
      */
-    String category() default "CUSTOM";
+    String[] capability() default { "CUSTOM" };
 
     /**
      * Scope role: CAPABILITY_STAGE | CONDITION | ITERATOR | FORK | JOIN.

@@ -35,7 +35,7 @@ import java.util.Map;
     name = "Stub Condition",
     version = "1.0.0",
     description = "Stub condition for group if/else; always returns branch 0 (then). For demos.",
-    category = "CONDITION",
+    capability = { "CONDITION" },
     inputs = {},
     outputs = {
         @OloPlugin.Output(name = "branch", type = "integer", description = "Branch index (0=then, 1=elseif, ...)"),

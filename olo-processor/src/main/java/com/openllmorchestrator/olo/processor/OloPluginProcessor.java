@@ -109,8 +109,11 @@ public final class OloPluginProcessor extends AbstractProcessor {
             sb.append(in).append("author: ").append(escapeYaml(p.author())).append("\n");
         }
         sb.append(in).append("license: ").append(escapeYaml(p.license())).append("\n");
-        String category = nonEmpty(p.category()) ? p.category() : "CUSTOM";
-        sb.append(in).append("category: ").append(escapeYaml(category)).append("\n");
+        String[] caps = (p.capability() != null && p.capability().length > 0) ? p.capability() : new String[] { "CUSTOM" };
+        sb.append(in).append("capability:\n");
+        for (String cap : caps) {
+            sb.append(in).append("  - ").append(escapeYaml(cap != null ? cap : "CUSTOM")).append("\n");
+        }
         sb.append(in).append("className: ").append(escapeYaml(className)).append("\n");
         if (p.website() != null && !p.website().isEmpty()) {
             sb.append(in).append("website: ").append(escapeYaml(p.website())).append("\n");

@@ -37,7 +37,7 @@ import java.util.Set;
     name = "Vector Store Retrieval",
     version = "1.0.0",
     description = "Store document chunks (doc pipeline) or retrieve chunks by question (QA/RAG pipeline).",
-    category = "VECTOR_STORE",
+    capability = { "VECTOR_STORE" },
     inputs = {
         @OloPlugin.Input(name = "question", type = "string", required = false, description = "User question for retrieval"),
         @OloPlugin.Input(name = "tokenizedChunks", type = "array", required = false, description = "Chunks to store from tokenizer")

@@ -43,7 +43,7 @@ import java.util.Set;
     name = "Answer Format",
     version = "1.0.0",
     description = "Renders model output as ANS: \"<response>\"; reads result or response from accumulated output.",
-    category = "OUTPUT",
+    capability = { "OUTPUT" },
     inputs = {},
     outputs = { @OloPlugin.Output(name = "output", type = "string", description = "Formatted answer line") }
 )

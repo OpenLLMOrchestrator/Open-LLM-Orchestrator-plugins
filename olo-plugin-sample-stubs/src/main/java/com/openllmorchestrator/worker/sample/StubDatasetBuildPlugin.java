@@ -31,7 +31,7 @@ import java.util.Map;
     name = "Stub Dataset Build",
     version = "1.0.0",
     description = "Stub dataset-build: no-op placeholder to curate training datasets. For demos.",
-    category = "DATASET_BUILD",
+    capability = { "DATASET_BUILD" },
     inputs = {},
     outputs = {
         @OloPlugin.Output(name = "datasetBuildRun", type = "boolean", description = "True if run"),

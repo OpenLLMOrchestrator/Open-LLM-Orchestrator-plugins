@@ -46,7 +46,7 @@ import java.util.Map;
     name = "Ollama LLM (Llama32)",
     version = "1.0.0",
     description = "Chat LLM via Ollama; supports any model. Input: messages or question. Env: OLLAMA_BASE_URL, OLLAMA_MODEL.",
-    category = "MODEL",
+    capability = { "MODEL" },
     inputs = {
         @OloPlugin.Input(name = "messages", type = "array", required = false, description = "Chat messages array"),
         @OloPlugin.Input(name = "question", type = "string", required = false, description = "Single question string"),

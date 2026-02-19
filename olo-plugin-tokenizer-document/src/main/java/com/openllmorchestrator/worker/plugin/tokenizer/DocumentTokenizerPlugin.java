@@ -36,7 +36,7 @@ import java.util.Set;
     name = "Document Tokenizer",
     version = "1.0.0",
     description = "Splits document content into chunks for embedding and storage.",
-    category = "TOKENIZER",
+    capability = { "TOKENIZER" },
     inputs = { @OloPlugin.Input(name = "document", type = "string", required = true, description = "Document content to tokenize") },
     outputs = { @OloPlugin.Output(name = "tokenizedChunks", type = "array", description = "List of chunk objects") }
 )

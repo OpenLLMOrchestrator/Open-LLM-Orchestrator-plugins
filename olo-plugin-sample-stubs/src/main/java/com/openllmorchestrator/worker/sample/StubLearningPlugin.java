@@ -31,7 +31,7 @@ import java.util.Map;
     name = "Stub Learning",
     version = "1.0.0",
     description = "Stub learning: no-op placeholder for incremental learning or fine-tuning. For demos.",
-    category = "LEARNING",
+    capability = { "LEARNING" },
     inputs = {},
     outputs = {
         @OloPlugin.Output(name = "learningRun", type = "boolean", description = "True if run"),

@@ -31,7 +31,7 @@ import java.util.Map;
     name = "Stub Model Registry",
     version = "1.0.0",
     description = "Stub model-registry: no-op placeholder to register or promote trained models. For demos.",
-    category = "MODEL_REGISTRY",
+    capability = { "MODEL_REGISTRY" },
     inputs = {},
     outputs = {
         @OloPlugin.Output(name = "modelRegistryRun", type = "boolean", description = "True if run"),

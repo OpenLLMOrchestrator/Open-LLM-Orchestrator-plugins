@@ -4,7 +4,7 @@ Annotations and constants for Open LLM Orchestrator plugins. Used by plugin modu
 
 ## Contents
 
-- **`@OloPlugin`** – Plugin descriptor: id, name, version, description, category, inputs, outputs, optional icon paths.
+- **`@OloPlugin`** – Plugin descriptor: id, name, version, description, capability (multi-valued), inputs, outputs, optional icon paths.
 - **`PackageFormat`** – Constants for .olo package layout (icon suffixes, default asset names, path helpers).
 - **`PluginDataPaths`** – Shared data directory for plugins: env `OLO_PLUGIN_DATA_DIR` (default `olo-data`), per-plugin subfolder by plugin id, and helpers to resolve relative paths (uploads, templates) so file availability is guaranteed in container.
 

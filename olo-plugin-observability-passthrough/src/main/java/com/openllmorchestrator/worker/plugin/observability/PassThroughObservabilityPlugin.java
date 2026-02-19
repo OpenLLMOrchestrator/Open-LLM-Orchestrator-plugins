@@ -21,7 +21,7 @@ import java.util.Set;
     name = "Pass-Through Observability",
     version = "1.0.0",
     description = "Pass-through with observed flag; forwards result and question for metrics/tracing hooks.",
-    category = "OBSERVABILITY",
+    capability = { "OBSERVABILITY" },
     inputs = {},
     outputs = {
         @OloPlugin.Output(name = "observed", type = "boolean", description = "True when observed"),

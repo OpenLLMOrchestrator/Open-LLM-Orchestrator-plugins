@@ -36,7 +36,7 @@ import java.util.Set;
     name = "Stub Filter",
     version = "1.0.0",
     description = "Stub filter: tokenize document into chunks. For demos and contract-only plugins.",
-    category = "FILTER",
+    capability = { "FILTER" },
     inputs = { @OloPlugin.Input(name = "document", type = "string", required = false, description = "Document content") },
     outputs = { @OloPlugin.Output(name = "tokenizedChunks", type = "array", description = "Chunks") }
 )

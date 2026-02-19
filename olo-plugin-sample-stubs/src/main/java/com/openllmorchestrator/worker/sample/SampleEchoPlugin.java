@@ -39,7 +39,7 @@ import java.util.Set;
     name = "Sample Echo",
     version = "1.0.0",
     description = "Sample plugin that echoes original input into output; for testing and as template.",
-    category = "TOOL",
+    capability = { "TOOL" },
     inputs = {},
     outputs = {},
     sampleInput = "{\"message\":\"Hello, validate me\"}",

@@ -31,7 +31,7 @@ import java.util.Map;
     name = "Stub Feedback",
     version = "1.0.0",
     description = "Stub feedback: no-op placeholder; collects user ratings for learning. For demos.",
-    category = "FEEDBACK",
+    capability = { "FEEDBACK" },
     inputs = {},
     outputs = {
         @OloPlugin.Output(name = "feedbackCollected", type = "boolean", description = "True if collected"),

@@ -23,7 +23,7 @@ import com.openllmorchestrator.olo.OloPlugin;
     name = "Qwen2 1.5B (Ollama)",
     version = "1.0.0",
     description = "Fixed-model Qwen2:1.5b chat via Ollama; for query-all-models ASYNC pipeline.",
-    category = "MODEL",
+    capability = { "MODEL" },
     inputs = {
         @OloPlugin.Input(name = "messages", type = "array", required = false, description = "Chat messages"),
         @OloPlugin.Input(name = "question", type = "string", required = false, description = "Question")

@@ -78,7 +78,7 @@ gradle oloZip
 
 ## OLO annotation and .olo packages
 
-- **`olo-annotations`**: `@OloPlugin` (id, name, version, description, category, inputs, outputs) for UI designer metadata.
+- **`olo-annotations`**: `@OloPlugin` (id, name, version, description, capability, inputs, outputs) for UI designer metadata.
 - **`olo-processor`**: Generates `plugin.yaml` from `@OloPlugin` at compile time.
 - **.olo package**: ZIP (`.olo`) with `plugin.yaml`, `plugin.jar`, `icons/`, `README.md`, `LICENSE`, `checksums.sha256`. See [docs/plugin-yaml-schema.md](docs/plugin-yaml-schema.md).
 

@@ -38,7 +38,7 @@ import java.util.Set;
     name = "Simple Guardrail",
     version = "1.0.0",
     description = "Optional max length and blocklist; sets guardrailTriggered and filteredContent when triggered.",
-    category = "GUARDRAIL",
+    capability = { "GUARDRAIL" },
     inputs = {
         @OloPlugin.Input(name = "question", type = "string", required = false, description = "Content to check"),
         @OloPlugin.Input(name = "maxLength", type = "integer", required = false, description = "Max allowed length"),

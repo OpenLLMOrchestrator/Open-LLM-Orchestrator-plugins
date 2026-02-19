@@ -36,7 +36,7 @@ import java.util.Set;
     name = "Context Memory",
     version = "1.0.0",
     description = "Request-scoped key-value memory; read/write via memoryKey and memoryValue.",
-    category = "MEMORY",
+    capability = { "MEMORY" },
     inputs = {
         @OloPlugin.Input(name = "memoryKey", type = "string", required = false, description = "Key for get/set"),
         @OloPlugin.Input(name = "memoryValue", type = "object", required = false, description = "Value to write")

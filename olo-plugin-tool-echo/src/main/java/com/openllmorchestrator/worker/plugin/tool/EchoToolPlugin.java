@@ -18,7 +18,7 @@ import java.util.Set;
     name = "Echo Tool",
     version = "1.0.0",
     description = "Echo tool: returns tool input as result; for testing or as template.",
-    category = "TOOL",
+    capability = { "TOOL" },
     inputs = {
         @OloPlugin.Input(name = "toolName", type = "string", required = false, description = "Tool name (default echo)"),
         @OloPlugin.Input(name = "toolInput", type = "object", required = false, description = "Input to echo"),

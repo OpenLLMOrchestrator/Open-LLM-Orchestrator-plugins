@@ -31,7 +31,7 @@ import java.util.Map;
     name = "Stub Evaluation",
     version = "1.0.0",
     description = "Stub evaluation: no-op placeholder; scores model output for quality gates. For demos.",
-    category = "EVALUATION",
+    capability = { "EVALUATION" },
     inputs = {},
     outputs = {
         @OloPlugin.Output(name = "evaluationScore", type = "number", description = "Score"),

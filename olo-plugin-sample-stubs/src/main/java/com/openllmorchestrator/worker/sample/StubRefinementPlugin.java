@@ -34,7 +34,7 @@ import java.util.Set;
     name = "Stub Refinement",
     version = "1.0.0",
     description = "Stub refinement: format result as ANS: \"...\". For demos.",
-    category = "REFINEMENT",
+    capability = { "REFINEMENT" },
     inputs = {},
     outputs = { @OloPlugin.Output(name = "output", type = "string", description = "Formatted ANS line") }
 )

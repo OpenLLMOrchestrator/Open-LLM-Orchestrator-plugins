@@ -23,7 +23,7 @@ import java.util.Set;
     name = "Stub Retrieval",
     version = "1.0.0",
     description = "Stub vector store: store chunks or retrieve by question. For demos.",
-    category = "VECTOR_STORE",
+    capability = { "VECTOR_STORE" },
     inputs = {
         @OloPlugin.Input(name = "question", type = "string", required = false, description = "Question for retrieval"),
         @OloPlugin.Input(name = "tokenizedChunks", type = "array", required = false, description = "Chunks to store")

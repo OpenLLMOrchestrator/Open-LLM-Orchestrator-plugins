@@ -17,7 +17,7 @@ import java.util.Set;
     name = "Allow All Access Control",
     version = "1.0.0",
     description = "Access control: allow-all with optional allowKey check.",
-    category = "ACCESS_CONTROL",
+    capability = { "ACCESS_CONTROL" },
     inputs = { @OloPlugin.Input(name = "allowKey", type = "boolean", required = false, description = "Optional key to allow request") },
     outputs = {
         @OloPlugin.Output(name = "accessAllowed", type = "boolean", description = "True if access granted"),

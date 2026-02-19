@@ -50,7 +50,7 @@ import java.util.stream.Stream;
     name = "Folder Ingestion",
     version = "1.0.0",
     description = "Reads files from a folder and outputs tokenizedChunks for vector DB storage.",
-    category = "INGESTION",
+    capability = { "INGESTION" },
     inputs = {
         @OloPlugin.Input(name = "folderPath", type = "string", required = true, description = "Path to folder"),
         @OloPlugin.Input(name = "fileExtensions", type = "string", required = false, description = "Comma-separated extensions e.g. .txt,.md,.pdf,.doc,.docx,.csv (default: common doc formats)"),

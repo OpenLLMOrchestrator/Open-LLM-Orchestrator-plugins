@@ -8,7 +8,7 @@ This document reviews all plugin projects for: **contract implementation**, **SP
 - Input: `context.getOriginalInput()` → `Map<String, Object>` (keys match plugin’s expected inputs).
 - Output: plugin calls `context.putOutput(key, value)` and returns `CapabilityResult` (often with `context.getCurrentPluginOutput()`).
 - Discovery: **Java SPI** – each JAR lists its handler class(es) in `META-INF/services/com.openllmorchestrator.worker.contract.CapabilityHandler` (and often `StageHandler`).
-- **@OloPlugin** on the handler class supplies metadata for the UI and for `plugin.yaml` (id, name, version, description, category, inputs, outputs, icons, and optionally **sampleInput** / **sampleInputDescription** for validation).
+- **@OloPlugin** on the handler class supplies metadata for the UI and for `plugin.yaml` (id, name, version, description, capability, inputs, outputs, icons, and optionally **sampleInput** / **sampleInputDescription** for validation).
 
 ## Per-project review
 
@@ -36,7 +36,7 @@ This document reviews all plugin projects for: **contract implementation**, **SP
 
 - **Contract**: All listed plugins implement `CapabilityHandler` and use `PluginContext` / `CapabilityResult`; they are consistent with the contract.
 - **SPI**: Each project’s `META-INF/services/com.openllmorchestrator.worker.contract.CapabilityHandler` lists the exact handler class name(s) for that JAR. Multi-handler projects (e.g. olo-plugin-llm-ollama, olo-plugin-sample-stubs) list all public handler classes.
-- **@OloPlugin**: Every handler class that should appear in the catalog is annotated with `@OloPlugin` (at least `id`; name defaults to class name, category to `"CUSTOM"`). Abstract or utility classes (e.g. FixedModelChatPlugin, OllamaModelResolver) are not annotated.
+- **@OloPlugin**: Every handler class that should appear in the catalog is annotated with `@OloPlugin` (at least `id`; name defaults to class name, capability to `"CUSTOM"`). Abstract or utility classes (e.g. FixedModelChatPlugin, OllamaModelResolver) are not annotated.
 - **Build**: Each project has its own `settings.gradle` / `build.gradle` and builds independently; the root `build.bat` / `build.sh` build and collect all plugins. No root Gradle project.
 
 ## Validation in the planned UI

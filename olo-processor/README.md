@@ -6,7 +6,7 @@ Annotation processor for Open LLM Orchestrator plugins. Scans `@OloPlugin` on pl
 
 - Discovers all types annotated with `@OloPlugin` in the compiled project.
 - Writes a single **`plugin:`** block or a **`plugins:`** array into `build/classes/java/main/olo/plugin.yaml`.
-- Fills id, name, version, description, category, className, inputs, outputs, and icon paths (class-based names + default fallbacks).
+- Fills id, name, version, description, capability, className, inputs, outputs, and icon paths (class-based names + default fallbacks).
 
 ## Dependencies
 

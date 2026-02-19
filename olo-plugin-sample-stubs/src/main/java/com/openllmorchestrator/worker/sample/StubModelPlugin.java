@@ -22,7 +22,7 @@ import java.util.Set;
     name = "Stub Model",
     version = "1.0.0",
     description = "Stub model: echo question as response; no LLM. For demos.",
-    category = "MODEL",
+    capability = { "MODEL" },
     inputs = {
         @OloPlugin.Input(name = "question", type = "string", required = false, description = "User question"),
         @OloPlugin.Input(name = "messages", type = "array", required = false, description = "Chat messages")

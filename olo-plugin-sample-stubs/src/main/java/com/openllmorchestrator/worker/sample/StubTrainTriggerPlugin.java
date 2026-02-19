@@ -31,7 +31,7 @@ import java.util.Map;
     name = "Stub Train Trigger",
     version = "1.0.0",
     description = "Stub train-trigger: no-op placeholder to trigger fine-tuning when conditions met. For demos.",
-    category = "TRAIN_TRIGGER",
+    capability = { "TRAIN_TRIGGER" },
     inputs = {},
     outputs = {
         @OloPlugin.Output(name = "trainTriggerRun", type = "boolean", description = "True if run"),

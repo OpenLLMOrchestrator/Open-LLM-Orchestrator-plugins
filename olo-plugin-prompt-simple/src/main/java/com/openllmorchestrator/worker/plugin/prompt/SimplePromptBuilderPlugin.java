@@ -17,7 +17,7 @@ import java.util.Set;
     name = "Simple Prompt Builder",
     version = "1.0.0",
     description = "Builds prompt from template with {question}, {context}, {result} placeholders.",
-    category = "PROMPT_BUILDER",
+    capability = { "PROMPT_BUILDER" },
     inputs = {
         @OloPlugin.Input(name = "question", type = "string", required = false, description = "User question"),
         @OloPlugin.Input(name = "template", type = "string", required = false, description = "Prompt template"),

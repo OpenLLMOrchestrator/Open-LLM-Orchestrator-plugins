@@ -47,7 +47,7 @@ import java.util.Set;
     name = "Ollama RAG (Llama32 Model)",
     version = "1.0.0",
     description = "RAG LLM via Ollama; uses retrievedChunks for context. Input: question or messages; optional modelId. Env: OLLAMA_BASE_URL, OLLAMA_MODEL.",
-    category = "MODEL",
+    capability = { "MODEL" },
     inputs = {
         @OloPlugin.Input(name = "question", type = "string", required = false, description = "User question"),
         @OloPlugin.Input(name = "messages", type = "array", required = false, description = "Chat messages"),
