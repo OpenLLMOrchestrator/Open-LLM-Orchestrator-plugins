@@ -27,6 +27,13 @@ import static java.lang.annotation.ElementType.TYPE;
  * <p>
  * Used to generate {@code plugin.yaml} and to build the .olo.zip package
  * (plugin.jar + plugin.yaml + icons + README + LICENSE + checksums).
+ * <p>
+ * Optional scope attributes describe where the plugin may be used: structural role
+ * ({@code scopeRole}), which capabilities can use it ({@code scopeCapabilities}),
+ * and whether it is only valid inside a GROUP ({@code scopeOnlyInsideGroup}).
+ *
+ * @see PluginRole
+ * @see <a href="https://github.com/Open-LLM-Orchestrator/Open-LLM-Orchestrator-Configuration/blob/main/docs/plugin-scope-schema.md">Plugin scope schema</a>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(TYPE)
@@ -70,6 +77,22 @@ public @interface OloPlugin {
      * Default: "CUSTOM" when empty.
      */
     String category() default "CUSTOM";
+
+    /**
+     * Scope role: CAPABILITY_STAGE | CONDITION | ITERATOR | FORK | JOIN.
+     * Default: CAPABILITY_STAGE.
+     */
+    String scopeRole() default "CAPABILITY_STAGE";
+
+    /**
+     * Capability names this plugin can be used in (e.g. CACHING, MODEL). Empty = all.
+     */
+    String[] scopeCapabilities() default {};
+
+    /**
+     * If true, plugin can only be used as direct child of a GROUP.
+     */
+    boolean scopeOnlyInsideGroup() default false;
 
     /**
      * Declared inputs for the UI (name, type, required, description).

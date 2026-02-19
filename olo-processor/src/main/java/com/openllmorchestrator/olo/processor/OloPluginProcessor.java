@@ -115,6 +115,7 @@ public final class OloPluginProcessor extends AbstractProcessor {
         if (p.website() != null && !p.website().isEmpty()) {
             sb.append(in).append("website: ").append(escapeYaml(p.website())).append("\n");
         }
+        appendScope(sb, p.scopeRole(), p.scopeCapabilities(), p.scopeOnlyInsideGroup(), in);
         sb.append(in).append("inputs:\n");
         for (OloPlugin.Input input : p.inputs()) {
             sb.append(in).append("  - name: ").append(escapeYaml(input.name())).append("\n");
@@ -144,6 +145,23 @@ public final class OloPluginProcessor extends AbstractProcessor {
         sb.append(in).append("  defaultSmallSvg: ").append(PackageFormat.DEFAULT_ICON_64_SVG).append("\n");
         sb.append(in).append("  defaultLargeSvg: ").append(PackageFormat.DEFAULT_ICON_256_SVG).append("\n");
         sb.append(in).append("  defaultBannerSvg: ").append(PackageFormat.DEFAULT_BANNER_SVG).append("\n");
+    }
+
+    private static void appendScope(StringBuilder sb, String role, String[] capabilities, boolean onlyInsideGroup, String indent) {
+        sb.append(indent).append("scope:\n");
+        String roleVal = (role == null || role.isEmpty()) ? "CAPABILITY_STAGE" : role;
+        sb.append(indent).append("  role: ").append(escapeYaml(roleVal)).append("\n");
+        if (capabilities == null || capabilities.length == 0) {
+            sb.append(indent).append("  capabilities: null\n");
+        } else {
+            sb.append(indent).append("  capabilities:\n");
+            for (String cap : capabilities) {
+                sb.append(indent).append("    - ").append(escapeYaml(cap)).append("\n");
+            }
+        }
+        if (onlyInsideGroup) {
+            sb.append(indent).append("  onlyInsideGroup: true\n");
+        }
     }
 
     private static boolean nonEmpty(String s) {
