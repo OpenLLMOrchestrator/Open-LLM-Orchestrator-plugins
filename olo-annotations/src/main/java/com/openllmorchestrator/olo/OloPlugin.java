@@ -46,7 +46,12 @@ public @interface OloPlugin {
     String id();
 
     /**
-     * Human-readable display name for the UI.
+     * Plugin type (e.g. PLUGIN). Emitted in plugin.yaml; default "PLUGIN" when empty.
+     */
+    String type() default "PLUGIN";
+
+    /**
+     * Human-readable display name for the UI (emitted as displayName in plugin.yaml).
      * Default: simple class name when empty.
      */
     String name() default "";

@@ -25,6 +25,9 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
@@ -87,22 +90,39 @@ public final class OloPluginProcessor extends AbstractProcessor {
             if (p == null) continue;
             String className = type.getQualifiedName().toString();
             String simpleName = type.getSimpleName().toString();
+            List<String> pluginTypes = getImplementedInterfaces(type);
             if (multiple) {
                 sb.append("  - plugin:\n");
-                appendPluginBlock(sb, className, simpleName, p, "    ");
+                appendPluginBlock(sb, className, simpleName, p, pluginTypes, "    ");
             } else {
                 sb.append("plugin:\n");
-                appendPluginBlock(sb, className, simpleName, p, "  ");
+                appendPluginBlock(sb, className, simpleName, p, pluginTypes, "  ");
             }
         }
         return sb.toString();
     }
 
-    private static void appendPluginBlock(StringBuilder sb, String className, String simpleName, OloPlugin p, String indent) {
+    private static List<String> getImplementedInterfaces(TypeElement type) {
+        List<String> list = new ArrayList<>();
+        for (TypeMirror tm : type.getInterfaces()) {
+            if (tm.getKind() == TypeKind.DECLARED) {
+                Element e = ((DeclaredType) tm).asElement();
+                if (e instanceof TypeElement te) {
+                    list.add(te.getSimpleName().toString());
+                }
+            }
+        }
+        return list;
+    }
+
+    private static void appendPluginBlock(StringBuilder sb, String className, String simpleName, OloPlugin p, List<String> pluginTypes, String indent) {
         String in = indent;
         sb.append(in).append("id: ").append(escapeYaml(p.id())).append("\n");
-        String name = nonEmpty(p.name()) ? p.name() : simpleName;
-        sb.append(in).append("name: ").append(escapeYaml(name)).append("\n");
+        String typeVal = nonEmpty(p.type()) ? p.type() : "PLUGIN";
+        sb.append(in).append("type: ").append(escapeYaml(typeVal)).append("\n");
+        sb.append(in).append("name: ").append(escapeYaml(className)).append("\n");
+        String displayName = nonEmpty(p.name()) ? p.name() : simpleName;
+        sb.append(in).append("displayName: ").append(escapeYaml(displayName)).append("\n");
         sb.append(in).append("version: ").append(escapeYaml(p.version())).append("\n");
         sb.append(in).append("description: ").append(escapeYaml(p.description() != null ? p.description() : "")).append("\n");
         if (p.author() != null && !p.author().isEmpty()) {
@@ -115,6 +135,10 @@ public final class OloPluginProcessor extends AbstractProcessor {
             sb.append(in).append("  - ").append(escapeYaml(cap != null ? cap : "CUSTOM")).append("\n");
         }
         sb.append(in).append("className: ").append(escapeYaml(className)).append("\n");
+        sb.append(in).append("pluginType:\n");
+        for (String iface : pluginTypes) {
+            sb.append(in).append("  - ").append(escapeYaml(iface)).append("\n");
+        }
         if (p.website() != null && !p.website().isEmpty()) {
             sb.append(in).append("website: ").append(escapeYaml(p.website())).append("\n");
         }

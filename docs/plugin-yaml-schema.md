@@ -8,9 +8,10 @@ Each `.olo` package (and the generated `plugin.yaml` inside it) bundles everythi
 
 | Data | Use in UI |
 |------|------------|
-| `id`, `name`, `version`, `description` | Catalog card and tooltip |
+| `id`, `type`, `name`, `displayName`, `version`, `description` | Catalog card and tooltip; type default PLUGIN; name = class FQCN; displayName = human-readable |
 | `capability` | List of capabilities (e.g. [MODEL], [CACHING], [ACCESS, MODEL]); palette grouping and pipeline stage type |
 | `className` | Runtime: load plugin class from `plugin.jar` |
+| `pluginType` | List of interfaces implemented by the plugin class (interface simple names) |
 | `inputs` / `outputs` | Ports to draw and connect (name, type, required, description) |
 | `icons.smallSvg`, `icons.largeSvg`, `icons.bannerSvg` | Card/thumbnail and detail view; fallback to `default*` if missing |
 
@@ -33,13 +34,16 @@ schemaVersion: "1.0"
 
 plugin:
   id: string              # Unique plugin id (e.g. com.openllm.plugin.vectordb)
-  name: string             # Display name
+  type: string            # e.g. PLUGIN (default)
+  name: string            # Class FQCN (e.g. com.openllmorchestrator.worker.plugin.folder.FolderIngestionPlugin)
+  displayName: string     # Human-readable name for UI
   version: string         # Semver (e.g. 1.2.0)
   description: string     # Short description
   author: string          # Optional
   license: string         # SPDX id (e.g. Apache-2.0)
-  capability: string[]     # e.g. [ "MODEL" ] or [ "ACCESS", "MODEL" ]
+  capability: string[]    # e.g. [ "MODEL" ] or [ "ACCESS", "MODEL" ]
   className: string       # FQCN of the plugin class
+  pluginType: string[]    # Interface simple names (e.g. CapabilityHandler, PluginTypeDescriptor)
   website: string         # Optional URL
   inputs:                 # For UI binding
     - name: string
