@@ -39,7 +39,7 @@ echo "[5/6] Building plugin projects and collecting outputs..."
 
 cp -f olo-plugin-llm-ollama/build/libs/olo-plugin-llm-ollama*-all.jar build/plugins/ 2>/dev/null || true
 
-for dir in olo-plugin-access-allowall olo-plugin-caching-memory olo-plugin-vectordb-retrieval olo-plugin-llm-mistral olo-plugin-llm-phi3 olo-plugin-llm-gemma2 olo-plugin-llm-qwen2 olo-plugin-tokenizer-document olo-plugin-folder-ingestion olo-plugin-output-answerformat olo-plugin-memory-context olo-plugin-tool-echo olo-plugin-guardrail-simple olo-plugin-prompt-simple olo-plugin-observability-passthrough olo-plugin-sample-stubs; do
+for dir in olo-plugin-access-allowall olo-plugin-caching-memory olo-plugin-vectordb-retrieval olo-plugin-llm-mistral olo-plugin-llm-phi3 olo-plugin-llm-gemma2 olo-plugin-llm-qwen2 olo-plugin-tokenizer-document olo-plugin-folder-ingestion olo-plugin-rag-file-ingestion olo-plugin-output-answerformat olo-plugin-memory-context olo-plugin-tool-echo olo-plugin-guardrail-simple olo-plugin-prompt-simple olo-plugin-observability-passthrough olo-plugin-sample-stubs; do
   if [ -d "$dir" ]; then
     if gradle_in "$dir" clean build; then
       cp -f "$dir/build/libs/${dir}"*-all.jar build/plugins/ 2>/dev/null || true

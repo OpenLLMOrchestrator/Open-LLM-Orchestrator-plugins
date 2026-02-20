@@ -41,6 +41,7 @@ Open-LLM-Orchestrator-plugins/
 | `olo-plugin-llm-qwen2` | Fixed-model Qwen2:1.5b chat (depends on olo-plugin-llm-ollama). |
 | `olo-plugin-tokenizer-document` | Document tokenizer → chunks. |
 | `olo-plugin-folder-ingestion` | Folder ingestion → tokenizedChunks. |
+| `olo-plugin-rag-file-ingestion` | RAG: read named files from env-configured folder (OLO_RAG_DATA_DIR or shared/rag), tokenize → tokenizedChunks for vector DB. |
 | `olo-plugin-output-answerformat` | Answer format: ANS: "...". |
 | `olo-plugin-memory-context` | Request-scoped key-value memory. |
 | `olo-plugin-tool-echo` | Echo tool (testing/template). |
